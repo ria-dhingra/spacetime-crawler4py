@@ -1,10 +1,32 @@
 #CS121_Assignment2
 
 import re
-from urllib.parse import urlparse, urljoin, urldefrag
-from bs4 import BeautifulSoup
+from urllib.parse import urlparse
 
 def scraper(url, resp):
+    global pages_processed, longest_page_info
+
+    clean_url = url.split('#')[0]
+    if resp.status == 200 and resp.raw_response and clean_url not in unique_urls:
+        unique_urls.add(clean_url)
+        pages_processed += 1
+
+        text = get_visible_text(resp.raw_response.content)
+        tokens = tokenize_string(text)
+
+        meaningful_tokens = [t for t in tokens if t not in STOP_WORDS and len(t) > 1]
+        for word in meaningful_tokens:
+            word_frequencies[word] = word_frequencies.get(word, 0) + 1
+        
+        global longest_page_info
+        if len(tokens) > longest_page_info[1]:
+            longest_page_info = (clean_url, len(tokens))
+        
+        
+        parsed = urlparse(url)
+        domain = parsed.netloc.lower()
+        if domain.endswith(".uci.edu"):
+            subdomain_counts[domain] = subdomain_counts.get(domain, 0) + 1
     links = extract_next_links(url, resp)
     return [link for link in links if is_valid(link)]
 
