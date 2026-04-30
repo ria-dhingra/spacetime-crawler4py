@@ -175,3 +175,18 @@ def is_valid(url):
     except TypeError:
         print ("TypeError for ", parsed)
         raise
+
+def make_report(filename="report.txt"):
+    f = open("report.txt", "w")
+
+    f.write("Unique Pages:" + str(len(unique_urls)) + "\n")
+    f.write("Longest Page:" + longest_page_info[0] + "\n")
+    f.write("Word Count: " + str(longest_page_info[1]) + "\n")
+    top_words = sorted(word_frequencies.items(), key=lambda x: x[1], reverse=True)[:50]
+    f.write("Top 50 Words: " + str(top_words) + "\n")
+    f.write("Subdomains: " + str(sorted(subdomain_counts.items())) + "\n")
+
+    f.close()
+
+if __name__ == "__main__":
+    make_report()
