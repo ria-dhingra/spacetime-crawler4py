@@ -198,6 +198,14 @@ def is_valid(url):
         if len(path_sections) > 6 and len(path_sections) != len(set(path_sections)):
             return False
 
+        #pages with dates regenerating
+        if re.search(r"/\d{4}/\d{2}/\d{2}", path):
+            return False
+
+        #pagination
+        if "/page/" in path:
+            return False
+
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
