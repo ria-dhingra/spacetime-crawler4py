@@ -2,6 +2,55 @@
 
 import re
 from urllib.parse import urlparse
+from bs4 import BeautifulSoup
+import json
+
+unique_urls = set()
+word_frequencies = {}
+subdomain_counts = {}
+longest_page_info = ("", 0)
+pages_processed = 0
+
+try:
+    with open("stopwords.txt", "r") as f:
+        STOP_WORDS = set(line.strip().lower() for line in f)
+except FileNotFoundError:
+    STOP_WORDS = set()
+    rint("Warning: stopwords.txt not found. Word frequencies will include stop words.")
+
+def save_stats():
+    stats = {
+        "unique_pages_count": len(unique_urls),
+        "subdomains": dict(sorted(subdomain_counts.items())),
+        "longest_page": longest_page_info,
+        "top_50_words": sorted(word_frequencies.items(), key=lambda x: x[1], reverse=True)[:50]
+    }
+    with open("stats_backup.json", "w") as f:
+        json.dump(stats, f, indent=4)
+
+def tokenize_string(text: str) -> list[str]:
+    tokens = []
+    current_token_chars = []
+
+    for char in text:
+        if char.isascii() and char.isalnum():
+            # normalize to lowercase and build the token
+            current_token_chars.append(char.lower())
+        else:
+            # found a delimiter
+            if current_token_chars:
+                tokens.append(''.join(current_token_chars))
+                current_token_chars = []
+    if current_token_chars:
+        tokens.append(''.join(current_token_chars))
+    return tokens
+
+def get_visible_text(html_content):
+    soup = BeautifulSoup(html_content, "html.parser")
+    for tag in soup(["script", "style", "nav", "footer", "header"]):
+        tag.decompose()
+    return soup.get_text(separator=' ', strip=True)
+
 
 def scraper(url, resp):
     global pages_processed, longest_page_info
