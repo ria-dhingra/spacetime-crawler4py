@@ -1,7 +1,7 @@
 #CS121_Assignment2
 
 import re
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin, urldefrag
 from bs4 import BeautifulSoup
 import json
 
@@ -16,7 +16,7 @@ try:
         STOP_WORDS = set(line.strip().lower() for line in f)
 except FileNotFoundError:
     STOP_WORDS = set()
-    rint("Warning: stopwords.txt not found. Word frequencies will include stop words.")
+    Print("Warning: stopwords.txt not found. Word frequencies will include stop words.")
 
 def tokenize_string(text: str) -> list[str]:
     tokens = []
