@@ -18,16 +18,6 @@ except FileNotFoundError:
     STOP_WORDS = set()
     rint("Warning: stopwords.txt not found. Word frequencies will include stop words.")
 
-def save_stats():
-    stats = {
-        "unique_pages_count": len(unique_urls),
-        "subdomains": dict(sorted(subdomain_counts.items())),
-        "longest_page": longest_page_info,
-        "top_50_words": sorted(word_frequencies.items(), key=lambda x: x[1], reverse=True)[:50]
-    }
-    with open("stats_backup.json", "w") as f:
-        json.dump(stats, f, indent=4)
-
 def tokenize_string(text: str) -> list[str]:
     tokens = []
     current_token_chars = []
