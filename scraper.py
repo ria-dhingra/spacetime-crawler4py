@@ -29,7 +29,7 @@ you're you've your yours yourself yourselves
 
 ALLOWED_DOMAINS = {"ics.uci.edu", "cs.uci.edu", "informatics.uci.edu", "stat.uci.edu"}
 
-WORD_RE = re.compile(r"[a-zA-Z][a-zA-Z']+")
+WORD_RE = re.compile(r"[a-zA-Z]+")
 
 INVALID_PARAMETERS = {
     "do", "tab_files", "tab_details", "image", "ns",
@@ -44,6 +44,8 @@ BAD_HTML_FILENAMES = {
     "teach.html", "students.html", "academics.html", "bio.html", 
     "apply.html", "faculty-staff.html"
 }
+
+TERMINAL_STATS_CODES = {604, 605, 607, 608}
 
 
 def save_stats():
@@ -77,23 +79,31 @@ def normalize(url):
     return f"{parsed.scheme}://{host}{parsed.path.rstrip('/')}"
 
 def tokenize_string(text: str) -> list[str]:
-    return re.findall(r'[a-zA-Z0-9]+', text.lower())
+    return re.findall(r'[a-zA-Z]+', text.lower())
 
 def scraper(url, resp):
     global pages_processed, longest_page_info
 
-    clean_url = normalize(url)
+    if resp.status in TERMINAL_STATS_CODES:
+        print(f"[SKIP] Cache server rejected {url} with status {resp.status}")
+        return []
+    final_url = resp.url if resp.url else url
+    clean_url = normalize(final_url)
 
     if resp.status == 200 and resp.raw_response and clean_url not in unique_urls:
-        unique_urls.add(clean_url)
-        pages_processed += 1
-
         raw_content = resp.raw_response.content
         visible_text = get_visible_text(raw_content)
         tokens = tokenize_string(visible_text)
 
         if len(raw_content) > 1000000 and len(tokens) < 300:
             return []
+
+        if len(tokens) < 50:
+            print(f"[SKIP] Low-content page ({len(tokens)} tokens): {clean_url}")
+            return []
+        
+        unique_urls.add(clean_url)
+        pages_processed += 1
 
         meaningful_tokens = [t for t in tokens if t not in STOPWORDS and len(t) > 1]
         for word in meaningful_tokens:
@@ -102,15 +112,14 @@ def scraper(url, resp):
         if len(tokens) > longest_page_info[1]:
             longest_page_info = (clean_url, len(tokens))
         
-        
         parsed = urlparse(clean_url)
         domain = (parsed.hostname or "").lower()
-        if domain.endswith(".uci.edu"):
+        if any(domain == d or domain.endswith("." + d) for d in ALLOWED_DOMAINS):
             subdomain_counts[domain] = subdomain_counts.get(domain, 0) + 1
         
-        if pages_processed % 50 == 0:
+        if pages_processed % 25 == 0:
             save_stats()
-            print(f"Progress Saved: {pages_processed} pages.")
+            print(f"Progress Saved: {pages_processed} pages processed.")
 
     links = extract_next_links(url, resp)
     return [link for link in links if is_valid(link)]
@@ -172,6 +181,9 @@ def is_valid(url):
         
         # checking invalid parameters
         if any(param in INVALID_PARAMETERS for param in query_params):
+            return False
+        
+        if len(query_params) > 3:
             return False
         
         # checking bad html filenames
