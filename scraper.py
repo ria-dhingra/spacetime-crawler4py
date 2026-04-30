@@ -1,5 +1,8 @@
+#CS121_Assignment2
+
 import re
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin, urldefrag
+from bs4 import BeautifulSoup
 
 def scraper(url, resp):
     links = extract_next_links(url, resp)
@@ -15,7 +18,33 @@ def extract_next_links(url, resp):
     #         resp.raw_response.url: the url, again
     #         resp.raw_response.content: the content of the page!
     # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
-    return list()
+    links = []
+    if resp.status != 200 or resp.raw_response is None:
+        return links
+
+    # handle the  redirection
+    final_url = resp.url
+    if final_url != url and not is_valid(final_url):
+        return links
+
+    try:
+        soup = BeautifulSoup(resp.raw_response.content, "html.parser")
+
+        for tag in soup.find_all("a", href=True):
+            href = tag.get("href")
+
+            absolute_url = urljoin(final_url, href)
+
+            # remove fragments (defragment)
+            clean_url = urldefrag(absolute_url)[0]
+
+            links.append(clean_url)
+
+    except Exception:
+        return list()
+
+    return links
+
 
 def is_valid(url):
     # Decide whether to crawl this url or not. 
@@ -23,8 +52,55 @@ def is_valid(url):
     # There are already some conditions that return False.
     try:
         parsed = urlparse(url)
+
         if parsed.scheme not in set(["http", "https"]):
             return False
+
+        domain = parsed.netloc.lower()
+        path = parsed.path.lower()
+        full_url = url.lower()
+
+        # allow only the required UCI domains
+        valid_domains = [
+        "ics.uci.edu",
+        "cs.uci.edu",
+        "informatics.uci.edu",
+        "stat.uci.edu"
+        ]
+
+        if not any(domain == d or domain.endswith("." + d) for d in valid_domains):
+            return False
+
+        #make sure  no falling into traps
+
+        # very long URLs
+        if len(url) > 300:
+            return False
+
+        # long query strings
+        if len(parsed.query) > 100:
+            return False
+
+        # too many path segments
+        path_sections = [p for p in path.split("/") if p]
+        if len(path_sections) > 12:
+            return False
+
+        # repeating directories(endless loops)
+        if len(path_sections) != len(set(path_sections)) and len(path_sections) > 7:
+            return False
+
+        # common trap keywords
+        trap_keys = [
+            "calendar", "date=", "month=", "year=",
+            "login", "logout", "session",
+            "sort=", "filter=",
+            "rss", "feed"
+        ]
+
+        if any(word in full_url for word in trap_keys):
+            return False
+
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
