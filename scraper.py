@@ -210,6 +210,14 @@ def is_valid(url):
         if len(path_sections) > 6 and len(path_sections) != len(set(path_sections)):
             return False
 
+        #pages with dates regenerating
+        if re.search(r"/\d{4}/\d{2}/\d{2}", path):
+            return False
+
+        #pagination
+        if "/page/" in path:
+            return False
+
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
@@ -219,7 +227,28 @@ def is_valid(url):
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv"
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())
+        
+    except ValueError:
+        return False
 
     except TypeError:
         print ("TypeError for ", parsed)
         raise
+
+def make_report(filename="report.txt"):
+    f = open(filename, "w")
+
+    f.write("Unique Pages: " + str(len(unique_urls)) + "\n")
+    f.write("Longest Page: " + longest_page_info[0] + "\n")
+    f.write("Word Count: " + str(longest_page_info[1]) + "\n")
+
+    top_words = sorted(word_frequencies.items(), key=lambda x: x[1], reverse=True)[:50]
+    f.write("Top 50 Words: " + str(top_words) + "\n")
+
+    f.write("Subdomains: " + str(sorted(subdomain_counts.items())) + "\n")
+
+    f.close()
+
+
+if __name__ == "__main__":
+    make_report()
