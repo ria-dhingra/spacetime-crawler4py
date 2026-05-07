@@ -29,7 +29,6 @@ you're you've your yours yourself yourselves
 
 ALLOWED_DOMAINS = {"ics.uci.edu", "cs.uci.edu", "informatics.uci.edu", "stat.uci.edu"}
 
-WORD_RE = re.compile(r"[a-zA-Z]+")
 
 INVALID_PARAMETERS = {
     "do", "tab_files", "tab_details", "image", "ns",
@@ -38,12 +37,6 @@ INVALID_PARAMETERS = {
     "share", "ical"
 }
 
-BAD_HTML_FILENAMES = {
-    "projects.html", "homework.html", "outline.html", "lecture-notes.html",
-    "grades.html", "handouts.html", 
-    "teach.html", "students.html", "academics.html", "bio.html", 
-    "apply.html", "faculty-staff.html"
-}
 
 TERMINAL_STATS_CODES = {604, 605, 607, 608}
 
@@ -62,13 +55,20 @@ def save_stats():
 
 def get_visible_text(html_content):
     soup = BeautifulSoup(html_content, "html.parser")
+    
     for tag in soup(["script", "style", "nav", "footer", "header", "noscript"]):
         tag.decompose()
     
-    for tag in soup.find_all(style=True):
-        style_content = tag["style"].replace(" ", " ").lower()
-        if "display:none" in style_content or "visibility:hidden" in style_content:
-            tag.decompose()
+    for tag in list(soup.find_all(style=True)):
+        try:
+            style_attr = tag.get("style", "")
+            if style_attr:
+                style_content = style_attr.replace(" ", "").lower()
+                if "display:none" in style_content or "visibility:hidden" in style_content:
+                    tag.decompose()
+        except Exception:
+            continue
+                
     return soup.get_text(separator=' ', strip=True)
 
 def normalize(url):
@@ -185,20 +185,22 @@ def is_valid(url):
         
         if len(query_params) > 3:
             return False
-        
-        # checking bad html filenames
-        path_parts = path.split("/")
-        filename = path_parts[-1] if path_parts else ""
-        if filename in BAD_HTML_FILENAMES:
-            return False
 
         #make sure  no falling into traps
 
         # handling calendar
-        if "calendar" in path or "event" in path or domain == "gitlab.ics.uci.edu":
+        if "calendar" in path or "/events/" in path or domain == "gitlab.ics.uci.edu":
             return False
             
         if domain == "archive.ics.uci.edu" and "datasets" in path:
+            return False
+        
+        # handling grape trap
+        if domain == "grape.ics.uci.edu":
+            return False
+        
+        # handling doku.php trap
+        if "doku.php" in path and query_params:
             return False
 
         # handling loop and length
@@ -207,26 +209,21 @@ def is_valid(url):
             return False
         
         # Repeating directory detection
-        if len(path_sections) > 6 and len(path_sections) != len(set(path_sections)):
+        if len(path_sections) > 4 and len(path_sections) != len(set(path_sections)):
             return False
 
-        #pages with dates regenerating
-        if re.search(r"/\d{4}/\d{2}/\d{2}", path):
-            return False
-
-        #pagination
-        if "/page/" in path:
+        # handles download trap
+        if "downloads" in path_sections:
             return False
 
         return not re.match(
-            r".*\.(css|js|bmp|gif|jpe?g|ico"
-            + r"|png|tiff?|mid|mp2|mp3|mp4"
-            + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
-            + r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
-            + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
-            + r"|epub|dll|cnf|tgz|sha1"
-            + r"|thmx|mso|arff|rtf|jar|csv"
-            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())
+            r".*\.(css|js|bmp|gif|jpe?g|png|tiff?|mid|mp2|mp3|mp4"
+            r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
+            r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
+            r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
+            r"|epub|dll|cnf|tgz|sha1"
+            r"|thmx|mso|arff|rtf|jar|csv"
+            r"|rm|smil|wmv|swf|wma|zip|rar|gz|mpg|ppsx|pps)$", parsed.path.lower())
         
     except ValueError:
         return False
@@ -234,21 +231,3 @@ def is_valid(url):
     except TypeError:
         print ("TypeError for ", parsed)
         raise
-
-def make_report(filename="report.txt"):
-    f = open(filename, "w")
-
-    f.write("Unique Pages: " + str(len(unique_urls)) + "\n")
-    f.write("Longest Page: " + longest_page_info[0] + "\n")
-    f.write("Word Count: " + str(longest_page_info[1]) + "\n")
-
-    top_words = sorted(word_frequencies.items(), key=lambda x: x[1], reverse=True)[:50]
-    f.write("Top 50 Words: " + str(top_words) + "\n")
-
-    f.write("Subdomains: " + str(sorted(subdomain_counts.items())) + "\n")
-
-    f.close()
-
-
-if __name__ == "__main__":
-    make_report()
