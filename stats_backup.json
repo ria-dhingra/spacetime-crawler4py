@@ -1,222 +1,283 @@
 {
-    "unique_pages_count": 250,
+    "unique_pages_count": 6100,
     "subdomains": {
-        "archive.ics.uci.edu": 5,
-        "cml.ics.uci.edu": 58,
-        "cs.ics.uci.edu": 4,
-        "cs.uci.edu": 2,
-        "grape.ics.uci.edu": 14,
-        "ics.uci.edu": 147,
-        "informatics.uci.edu": 1,
-        "isg.ics.uci.edu": 2,
+        "accessibility.ics.uci.edu": 6,
+        "acoi.ics.uci.edu": 80,
+        "archive-beta.ics.uci.edu": 4,
+        "archive.ics.uci.edu": 25,
+        "asterix.ics.uci.edu": 6,
+        "cert.ics.uci.edu": 22,
+        "checkin.ics.uci.edu": 1,
+        "chenli.ics.uci.edu": 10,
+        "cloudberry.ics.uci.edu": 3,
+        "cml.ics.uci.edu": 188,
+        "code.ics.uci.edu": 14,
+        "computableplant.ics.uci.edu": 65,
+        "courselisting.ics.uci.edu": 3,
+        "create.ics.uci.edu": 7,
+        "cs.ics.uci.edu": 11,
+        "cs.uci.edu": 3,
+        "dale-cooper-v0.ics.uci.edu": 1,
+        "ds4all.ics.uci.edu": 6,
+        "duttgroup.ics.uci.edu": 85,
+        "dynamo.ics.uci.edu": 29,
+        "edgelab.ics.uci.edu": 6,
+        "elms.ics.uci.edu": 4,
+        "emj.ics.uci.edu": 34,
+        "evoke.ics.uci.edu": 4,
+        "flamingo.ics.uci.edu": 11,
+        "fr.ics.uci.edu": 3,
+        "futurehealth.ics.uci.edu": 148,
+        "graphics.ics.uci.edu": 5,
+        "hobbes.ics.uci.edu": 10,
+        "hpi.ics.uci.edu": 5,
+        "hub.ics.uci.edu": 4,
+        "i-sensorium.ics.uci.edu": 5,
+        "iasl.ics.uci.edu": 1,
+        "icde2023.ics.uci.edu": 46,
+        "ics.uci.edu": 997,
+        "industryshowcase.ics.uci.edu": 24,
+        "informatics.ics.uci.edu": 22,
+        "informatics.uci.edu": 15,
+        "intranet.ics.uci.edu": 3,
+        "ipubmed.ics.uci.edu": 1,
+        "isg.ics.uci.edu": 230,
+        "jgarcia.ics.uci.edu": 1,
+        "julia-hub.ics.uci.edu": 2,
+        "luci.ics.uci.edu": 4,
+        "mailman.ics.uci.edu": 36,
+        "malek.ics.uci.edu": 1,
+        "mcs.ics.uci.edu": 10,
+        "mds.ics.uci.edu": 8,
+        "mhcid.ics.uci.edu": 16,
+        "mswe.ics.uci.edu": 10,
+        "myip.ics.uci.edu": 1,
+        "nalini.ics.uci.edu": 4,
+        "ngs.ics.uci.edu": 1944,
+        "oai.ics.uci.edu": 5,
+        "riscit.ics.uci.edu": 1,
+        "scale.ics.uci.edu": 6,
+        "seal.ics.uci.edu": 47,
+        "sherlock.ics.uci.edu": 6,
+        "staging-hub.ics.uci.edu": 2,
+        "stairs.ics.uci.edu": 3,
         "stat.ics.uci.edu": 6,
-        "stat.uci.edu": 1,
-        "summeracademy.ics.uci.edu": 10
+        "stat.uci.edu": 3,
+        "summeracademy.ics.uci.edu": 10,
+        "swiki.ics.uci.edu": 235,
+        "tastier.ics.uci.edu": 1,
+        "tutoring.ics.uci.edu": 3,
+        "unite.ics.uci.edu": 8,
+        "vision.ics.uci.edu": 201,
+        "wics.ics.uci.edu": 363,
+        "wiki.ics.uci.edu": 988,
+        "www-db.ics.uci.edu": 24,
+        "xtune.ics.uci.edu": 4
     },
     "longest_page": [
-        "https://cml.ics.uci.edu/2025/01/winter-2025",
-        5163
+        "https://cml.ics.uci.edu/category/aiml",
+        24896
     ],
     "top_50_words": [
         [
-            "learning",
-            1161
-        ],
-        [
-            "science",
-            942
-        ],
-        [
-            "computer",
-            832
-        ],
-        [
-            "research",
-            814
-        ],
-        [
-            "data",
-            767
-        ],
-        [
-            "models",
-            756
-        ],
-        [
-            "university",
-            707
-        ],
-        [
-            "will",
-            680
-        ],
-        [
-            "machine",
-            620
+            "ics",
+            15157
         ],
         [
             "uci",
-            600
+            9147
         ],
         [
-            "dechter",
-            518
+            "data",
+            8422
         ],
         [
-            "professor",
-            462
-        ],
-        [
-            "irvine",
-            455
-        ],
-        [
-            "pm",
-            441
+            "ramesh",
+            7884
         ],
         [
             "information",
-            414
+            7524
         ],
         [
-            "ai",
-            401
+            "will",
+            7005
         ],
         [
-            "rina",
-            370
+            "university",
+            6951
         ],
         [
-            "search",
-            363
+            "research",
+            6517
         ],
         [
-            "california",
-            355
+            "computer",
+            6394
         ],
         [
-            "systems",
-            355
-        ],
-        [
-            "model",
-            353
-        ],
-        [
-            "ics",
-            319
-        ],
-        [
-            "department",
-            303
+            "support",
+            6224
         ],
         [
             "edu",
-            300
+            5626
         ],
         [
-            "language",
-            299
+            "read",
+            5548
         ],
         [
-            "first",
-            294
+            "software",
+            5461
         ],
         [
-            "algorithms",
-            282
+            "systems",
+            5096
         ],
         [
-            "view",
-            270
+            "science",
+            4952
         ],
         [
-            "talk",
-            266
+            "wiki",
+            4790
         ],
         [
-            "dr",
-            265
-        ],
-        [
-            "deep",
-            265
-        ],
-        [
-            "work",
-            264
-        ],
-        [
-            "new",
-            260
-        ],
-        [
-            "methods",
-            258
-        ],
-        [
-            "inference",
-            254
-        ],
-        [
-            "based",
-            247
-        ],
-        [
-            "uc",
-            244
-        ],
-        [
-            "bren",
-            243
+            "learning",
+            4706
         ],
         [
             "using",
-            234
+            4455
         ],
         [
-            "dbh",
-            232
-        ],
-        [
-            "applications",
-            231
-        ],
-        [
-            "school",
-            230
-        ],
-        [
-            "also",
-            229
-        ],
-        [
-            "phd",
-            222
-        ],
-        [
-            "processing",
-            213
+            "computing",
+            4313
         ],
         [
             "time",
-            213
+            4110
+        ],
+        [
+            "log",
+            4099
+        ],
+        [
+            "search",
+            4042
+        ],
+        [
+            "irvine",
+            3886
+        ],
+        [
+            "access",
+            3846
+        ],
+        [
+            "new",
+            3799
+        ],
+        [
+            "intent",
+            3552
+        ],
+        [
+            "may",
+            3514
+        ],
+        [
+            "models",
+            3449
+        ],
+        [
+            "group",
+            3410
+        ],
+        [
+            "people",
+            3370
         ],
         [
             "pdf",
-            205
+            3285
         ],
         [
-            "hall",
-            205
+            "one",
+            3241
         ],
         [
-            "problems",
-            203
+            "events",
+            3233
         ],
         [
-            "bio",
-            203
+            "please",
+            3158
+        ],
+        [
+            "based",
+            3090
+        ],
+        [
+            "pm",
+            3050
+        ],
+        [
+            "com",
+            3037
+        ],
+        [
+            "technical",
+            2933
+        ],
+        [
+            "applications",
+            2917
+        ],
+        [
+            "system",
+            2822
+        ],
+        [
+            "paper",
+            2779
+        ],
+        [
+            "use",
+            2775
+        ],
+        [
+            "technology",
+            2765
+        ],
+        [
+            "general",
+            2724
+        ],
+        [
+            "conference",
+            2721
+        ],
+        [
+            "https",
+            2698
+        ],
+        [
+            "jain",
+            2652
+        ],
+        [
+            "uc",
+            2646
+        ],
+        [
+            "first",
+            2603
+        ],
+        [
+            "students",
+            2591
         ]
     ]
 }
